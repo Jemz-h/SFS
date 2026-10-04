@@ -1,0 +1,34 @@
+<Project>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'StudentFeedbackSystem'">
+	<Compile Remove="DataAccess\MongoContext.cs" />
+	<Compile Include="AdminPages\AuditLog.aspx.cs"><DependentUpon>AuditLog.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="AdminPages\AuditLog.aspx.designer.cs"><DependentUpon>AuditLog.aspx</DependentUpon></Compile>
+	<Compile Include="AdminPages\ManageCriteria.aspx.cs"><DependentUpon>ManageCriteria.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="AdminPages\ManageCriteria.aspx.designer.cs"><DependentUpon>ManageCriteria.aspx</DependentUpon></Compile>
+	<Compile Include="AdminPages\RatingResults.aspx.cs"><DependentUpon>RatingResults.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="AdminPages\RatingResults.aspx.designer.cs"><DependentUpon>RatingResults.aspx</DependentUpon></Compile>
+	<Compile Include="Models\RatingDtos.cs" />
+	<Compile Include="Repositories\CriterionRepository.cs" />
+	<Compile Include="Repositories\EnrollmentRepository.cs" />
+	<Compile Include="Repositories\FeedbackRepository.cs" />
+	<Compile Include="Repositories\ICriterionRepository.cs" />
+	<Compile Include="Repositories\IEnrollmentRepository.cs" />
+	<Compile Include="Repositories\IFeedbackRepository.cs" />
+	<Compile Include="Services\RatingService.cs" />
+	<Compile Include="Services\ReportService.cs" />
+	<Compile Include="StudentPages\Dashboard.aspx.designer.cs"><DependentUpon>Dashboard.aspx</DependentUpon></Compile>
+	<Compile Include="StudentPages\MyCourses.aspx.cs"><DependentUpon>MyCourses.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="StudentPages\MyCourses.aspx.designer.cs"><DependentUpon>MyCourses.aspx</DependentUpon></Compile>
+	<Compile Include="StudentPages\MyRatingHistory.aspx.cs"><DependentUpon>MyRatingHistory.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="StudentPages\MyRatingHistory.aspx.designer.cs"><DependentUpon>MyRatingHistory.aspx</DependentUpon></Compile>
+	<Compile Include="StudentPages\RateCourse.aspx.cs"><DependentUpon>RateCourse.aspx</DependentUpon><SubType>ASPXCodeBehind</SubType></Compile>
+	<Compile Include="StudentPages\RateCourse.aspx.designer.cs"><DependentUpon>RateCourse.aspx</DependentUpon></Compile>
+	<Content Include="AdminPages\AuditLog.aspx" />
+	<Content Include="AdminPages\ManageCriteria.aspx" />
+	<Content Include="AdminPages\RatingResults.aspx" />
+	<Content Include="StudentPages\MyCourses.aspx" />
+	<Content Include="StudentPages\MyRatingHistory.aspx" />
+	<Content Include="StudentPages\RateCourse.aspx" />
+	  <Content Include="Web.Release.config" />
+  </ItemGroup>
+</Project>

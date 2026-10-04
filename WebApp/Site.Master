@@ -1,0 +1,410 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="StudentFeedbackSystem.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><asp:ContentPlaceHolder ID="TitleContent" runat="server">Student Feedback System</asp:ContentPlaceHolder></title>
+    <script>
+        (function () {
+            try {
+                document.documentElement.classList.toggle(
+                    'dark-mode',
+                    window.localStorage.getItem('studentFeedbackTheme') === 'dark'
+                );
+            } catch (error) { }
+        }());
+    </script>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/site.css?v=4") %>" />
+</head>
+<body>
+    <form id="mainForm" runat="server">
+        <header class="topbar">
+            <div class="topbar-left">
+                <a id="brandLink" href="~/Login.aspx" runat="server" class="brand">
+                    <span class="brand-icon">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                        </svg>
+                    </span>
+                    <span class="brand-text">Student Feedback <span class="brand-subtext">&amp; Rating System</span></span>
+                </a>
+            </div>
+            <div class="topbar-actions">
+                <div class="user-pill">
+                    <span class="user-dot"></span>
+                    <asp:LoginName ID="LoginName1" runat="server" CssClass="user-label" />
+                </div>
+                <button type="button" id="themeToggle" class="theme-toggle" aria-label="Switch theme" aria-pressed="false">
+                    <span id="themeToggleIcon" class="theme-toggle-icon"></span>
+                    <span id="themeToggleText">Dark mode</span>
+                </button>
+                <%-- Sign out button removed from topbar; available in sidebar footer --%>
+            </div>
+        </header>
+
+        <div class="site-layout">
+            <asp:Panel ID="pnlAdminSidebar" runat="server" CssClass="admin-sidepanel" Visible="false">
+                <div class="sidepanel-header">
+                    <div class="sidepanel-brand">
+                        <div class="sidepanel-brand-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <div class="sidepanel-brand-info">
+                            <span class="sidepanel-title">Admin Console</span>
+                            <span class="sidepanel-status"><span class="pulse-dot"></span> Online</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidepanel-user-card">
+                    <div class="sidepanel-user-avatar">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="sidepanel-user-details">
+                        <span class="sidepanel-user-name"><asp:Literal ID="litAdminUsername" runat="server" /></span>
+                        <span class="sidepanel-role-badge"><asp:Literal ID="litAdminRoleBadge" runat="server" /></span>
+                    </div>
+                </div>
+
+                <div class="sidepanel-nav-container">
+                    <div class="nav-section-title">Overview</div>
+                    <nav class="sidepanel-nav" aria-label="Overview navigation">
+                        <a href="~/AdminPages/Dashboard.aspx" runat="server" class="sidepanel-link" data-page="dashboard">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="9"></rect>
+                                    <rect x="14" y="3" width="7" height="5"></rect>
+                                    <rect x="14" y="12" width="7" height="9"></rect>
+                                    <rect x="3" y="16" width="7" height="5"></rect>
+                                </svg>
+                            </span>
+                            <span class="link-text">Dashboard</span>
+                        </a>
+                        <a href="~/AdminPages/VerifyStudents.aspx" runat="server" class="sidepanel-link" data-page="verifystudents">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <polyline points="17 11 19 13 23 9"></polyline>
+                                </svg>
+                            </span>
+                            <span class="link-text">Verify Students</span>
+                            <asp:Literal ID="litSidebarPendingBadge" runat="server" />
+                        </a>
+                    </nav>
+
+                    <div class="nav-section-title">Evaluation &amp; Analytics</div>
+                    <nav class="sidepanel-nav" aria-label="Evaluation analytics navigation">
+                        <a href="~/AdminPages/RatingResults.aspx" runat="server" class="sidepanel-link" data-page="ratingresults">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </span>
+                            <span class="link-text">Rating Results</span>
+                        </a>
+                    </nav>
+
+                    <div class="nav-section-title">Academic Management</div>
+                    <nav class="sidepanel-nav" aria-label="Academic management navigation">
+                        <a href="~/AdminPages/ManageCourses.aspx" runat="server" class="sidepanel-link" data-page="managecourses">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                            </span>
+                            <span class="link-text">Manage Courses</span>
+                        </a>
+                        <a href="~/AdminPages/ManageProfessors.aspx" runat="server" class="sidepanel-link" data-page="manageprofessors">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </span>
+                            <span class="link-text">Manage Professors</span>
+                        </a>
+                        <a href="~/AdminPages/ManageSections.aspx" runat="server" class="sidepanel-link" data-page="managesections">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                            </span>
+                            <span class="link-text">Manage Sections</span>
+                        </a>
+                    </nav>
+
+                    <div class="nav-section-title">System &amp; Audit</div>
+                    <nav class="sidepanel-nav" aria-label="System navigation">
+                        <a href="~/AdminPages/ManageCriteria.aspx" runat="server" class="sidepanel-link" data-page="managecriteria">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                            </span>
+                            <span class="link-text">Evaluation Rubric</span>
+                        </a>
+                        <a href="~/AdminPages/AuditLog.aspx" runat="server" class="sidepanel-link" data-page="auditlog">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                            </span>
+                            <span class="link-text">Audit Trail</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidepanel-footer">
+                    <div class="sidepanel-footer-info">
+                        <span class="footer-app-name">SFS Admin Portal</span>
+                        <span class="footer-app-ver">v2.0</span>
+                    </div>
+                    <asp:LinkButton ID="lnkSidebarLogout" runat="server" CssClass="sidepanel-logout-btn" OnClick="lnkLogout_Click" OnClientClick="return requestLogoutConfirmation(this);" ToolTip="Sign out">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Sign out</span>
+                    </asp:LinkButton>
+                </div>
+            </asp:Panel>
+
+            <!-- Student side navigation -->
+            <asp:Panel ID="pnlStudentSidebar" runat="server" CssClass="admin-sidepanel student-sidepanel" Visible="false">
+                <div class="sidepanel-header">
+                    <div class="sidepanel-brand">
+                        <div class="sidepanel-brand-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                            </svg>
+                        </div>
+                        <div class="sidepanel-brand-info">
+                            <span class="sidepanel-title">Student Portal</span>
+                            <span class="sidepanel-status"><span class="pulse-dot"></span> Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidepanel-user-card">
+                    <div class="sidepanel-user-avatar">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="sidepanel-user-details">
+                        <span class="sidepanel-user-name"><asp:Literal ID="litStudentUsername" runat="server" /></span>
+                        <span class="sidepanel-role-badge">Student</span>
+                    </div>
+                </div>
+
+                <div class="sidepanel-nav-container">
+                    <div class="nav-section-title">Navigation</div>
+                    <nav class="sidepanel-nav" aria-label="Student navigation">
+                        <a href="~/StudentPages/Dashboard.aspx" runat="server" class="sidepanel-link" data-page="dashboard">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="7" height="9"></rect>
+                                    <rect x="14" y="3" width="7" height="5"></rect>
+                                    <rect x="14" y="12" width="7" height="9"></rect>
+                                    <rect x="3" y="16" width="7" height="5"></rect>
+                                </svg>
+                            </span>
+                            <span class="link-text">Dashboard</span>
+                        </a>
+                        <a href="~/StudentPages/MyCourses.aspx" runat="server" class="sidepanel-link" data-page="mycourses">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                                </svg>
+                            </span>
+                            <span class="link-text">My Courses &amp; Ratings</span>
+                            <asp:Literal ID="litStudentPendingBadge" runat="server" />
+                        </a>
+                        <a href="~/StudentPages/MyRatingHistory.aspx" runat="server" class="sidepanel-link" data-page="myratinghistory">
+                            <span class="link-icon">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                            </span>
+                            <span class="link-text">Evaluation History</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="sidepanel-footer">
+                    <div class="sidepanel-footer-info">
+                        <span class="footer-app-name">Student Feedback</span>
+                        <span class="footer-app-ver">v2.0</span>
+                    </div>
+                    <asp:LinkButton ID="lnkStudentSidebarLogout" runat="server" CssClass="sidepanel-logout-btn" OnClick="lnkLogout_Click" OnClientClick="return requestLogoutConfirmation(this);" ToolTip="Sign out">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        <span>Sign out</span>
+                    </asp:LinkButton>
+                </div>
+            </asp:Panel>
+            <main class="content">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+            </main>
+        </div>
+
+        <div id="logoutConfirmDialog" class="logout-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="logoutConfirmTitle" aria-describedby="logoutConfirmMessage" hidden>
+            <div class="auth-card logout-confirm-card">
+                <h1 id="logoutConfirmTitle">Sign out?</h1>
+                <p id="logoutConfirmMessage">Are you sure you want to sign out of this account?</p>
+                <div class="logout-confirm-actions">
+                    <button id="cancelLogout" type="button" class="btn btn-ghost">Cancel</button>
+                    <button id="confirmLogout" type="button" class="btn btn-primary">SIGN OUT</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var storageKey = 'studentFeedbackTheme';
+            var logoutDialog = document.getElementById('logoutConfirmDialog');
+            var cancelLogoutButton = document.getElementById('cancelLogout');
+            var confirmLogoutButton = document.getElementById('confirmLogout');
+            var pendingLogoutLink = null;
+            var previousFocus = null;
+            var allowLogoutPostback = false;
+
+            window.requestLogoutConfirmation = function (logoutLink) {
+                if (allowLogoutPostback) {
+                    allowLogoutPostback = false;
+                    return true;
+                }
+
+                if (!logoutDialog) return false;
+
+                pendingLogoutLink = logoutLink;
+                previousFocus = document.activeElement;
+                logoutDialog.hidden = false;
+                cancelLogoutButton.focus();
+                return false;
+            };
+
+            function closeLogoutDialog() {
+                logoutDialog.hidden = true;
+                pendingLogoutLink = null;
+                if (previousFocus) previousFocus.focus();
+                previousFocus = null;
+            }
+
+            cancelLogoutButton.addEventListener('click', closeLogoutDialog);
+            confirmLogoutButton.addEventListener('click', function () {
+                var logoutLink = pendingLogoutLink;
+                if (!logoutLink) return;
+
+                closeLogoutDialog();
+                allowLogoutPostback = true;
+                logoutLink.click();
+            });
+
+            logoutDialog.addEventListener('click', function (event) {
+                if (event.target === logoutDialog) closeLogoutDialog();
+            });
+
+            logoutDialog.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape') {
+                    event.preventDefault();
+                    closeLogoutDialog();
+                } else if (event.key === 'Tab') {
+                    if (event.shiftKey && document.activeElement === cancelLogoutButton) {
+                        event.preventDefault();
+                        confirmLogoutButton.focus();
+                    } else if (!event.shiftKey && document.activeElement === confirmLogoutButton) {
+                        event.preventDefault();
+                        cancelLogoutButton.focus();
+                    }
+                }
+            });
+
+            function getTheme() {
+                try {
+                    return window.localStorage.getItem(storageKey) === 'dark' ? 'dark' : 'light';
+                } catch (error) {
+                    return root.classList.contains('dark-mode') ? 'dark' : 'light';
+                }
+            }
+
+            function applyTheme(theme) {
+                var isDark = theme === 'dark';
+                root.classList.toggle('dark-mode', isDark);
+
+                var toggle = document.getElementById('themeToggle');
+                var toggleText = document.getElementById('themeToggleText');
+                var toggleIcon = document.getElementById('themeToggleIcon');
+                if (!toggle) return;
+
+                if (toggleText) toggleText.textContent = isDark ? 'Light mode' : 'Dark mode';
+                toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+                toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+                if (toggleIcon) {
+                    toggleIcon.innerHTML = isDark
+                        ? '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+                        : '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+                }
+            }
+
+            applyTheme(getTheme());
+
+            var toggle = document.getElementById('themeToggle');
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    var nextTheme = root.classList.contains('dark-mode') ? 'light' : 'dark';
+                    try {
+                        window.localStorage.setItem(storageKey, nextTheme);
+                    } catch (error) { }
+                    applyTheme(nextTheme);
+                });
+            }
+
+            // Active sidepanel link highlighting
+            try {
+                var currentPath = window.location.pathname.toLowerCase();
+                var navLinks = document.querySelectorAll('.sidepanel-link');
+                navLinks.forEach(function (link) {
+                    var dataPage = link.getAttribute('data-page');
+                    if (dataPage && currentPath.indexOf(dataPage) !== -1) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-current', 'page');
+                    }
+                });
+            } catch (e) { }
+        }());
+    </script>
+</body>
+</html>

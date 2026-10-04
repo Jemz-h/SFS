@@ -1,0 +1,5 @@
+<Project>
+	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'StudentFeedbackSystem'">
+	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+</Project>
